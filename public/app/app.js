@@ -1,10 +1,6 @@
 var app = angular.module('mainApp',['ngRoute']).run(function($rootScope,$http,$location){
-	$rootScope.authen = false;
-	$rootScope.current = '';
-	$rootScope.user='';
-	$rootScope.current_user='';
-	$rootScope.current_user_messages='';
-	$rootScope.socket;
+	$rootScope.current_user ;
+	socket = io();
 });
 
 app.config(function($routeProvider){
@@ -29,63 +25,39 @@ app.config(function($routeProvider){
 		controller:'chatController',
 		templateUrl:'../../views/chat.html'
 	})
-	.when('/beforechat',{
-		controller:'userController',
-		templateUrl:'../../views/beforechat.html'
-	})
 	.otherwise({redirectTo:'/home'});
 });
 
-app.controller('userController',function($scope,$location,$rootScope){
-	$rootScope.socket = io.connect();
-	$scope.gochat = function(){
-		$rootScope.socket.emit('new uservalue',$scope.user,function(data){
-			console.log(data);
-			if(data){
-				//$scope.gochatting = true;
-				//console.log('aya ksjfslfjl');
-				$location.path('/chat');	
-			}
-		});
-	};
-	$rootScope.socket.on('users',function(data){
-		console.log("data naya banda aya ya gaya"+data);
-		$rootScope.user = data;
-		//console.log("scope "+$scope.user);
-	});
-
-	$rootScope.socket.on('current_user',function(data){
-		$rootScope.current_user = data;
-	});
-});
-
 app.controller('chatController',function($scope,$location,$rootScope){
-	///if(!$rootScope.current_user)
-	
-	$rootScope.current_user_messages = document.getElementById('message');
-	//$scope.gochating = false;
-	console.log("aya re ");
+	$scope.gochat = function(){
+		if($scope.user){
+			
+			socket.emit('new uservalue',$scope.user,function(data){
+				if(data){
+					$rootScope.current_user = $scope.user;
+				}
+			});
+		}
+	};
 
-	
-	//var message = document.getElementById('message');
-	
-	$rootScope.socket.on('new message',function(data){
-		console.log("ek bar aja data "+data);
-		$rootScope.current_user_messages.innerHTML+="<strong>"+data.user+"</strong>"+":" +data.message+ '<br />';
-		console.log($rootScope.current_user_messages);
+	$scope.send=function(){
+		socket.emit('send message',$scope.usermessage);
+		$scope.usermessage = '';
+	}
+
+	socket.on('new message',function(data){
+		console.log(data);
+		$(function(){
+			if(data.user == $rootScope.current_user)
+			$('#chatWindow').append('<div  class="float-left" id="chatname">'+data.user+'</div><div id="message" class = "left float-left">'+data.message+'</div>');
+			else
+			$('#chatWindow').append('<div id="message" class = "right float-right">'+data.message+'</div><div id="chatname" class="float-right">'+data.user+'</div>');				
+		})
 	});
 
-	
-
-	
-	
-	
-	$scope.send = function(){
-		//console.log("aya reer ");
-		//console.log($scope.usermessage);
-		$rootScope.socket.emit('send message',$scope.usermessage);
-		$scope.usermessage = '';
-	};
+	socket.on('users',function(data){
+		$scope.usersOnline = data;
+	});
 });
 
 app.controller('submitController',function($http,$scope){
