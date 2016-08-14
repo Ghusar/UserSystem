@@ -1,15 +1,20 @@
-<div id="chat" ng-show='current_user'>
+<div id="chat" ng-show='authen'>
 	<div class = "row">
 		<div class="col-md-offset-3 col-md-6">
+		<div class="{{class}}" ng-hide="">{{er}}</div>
 			<div id="chatWindow" style="overflow:scroll">
 				<!-- Paragraphs of messages will be added via this -->
+				<div ng-repeat="data in msg">
+				<div  class="float-left" id="chatname" ng-if="data.user == current">{{data.user}}</div><div id="message" class = "left float-left" ng-if="data.user == current">{{data.message}}</div>
+				<div id="message" class = "right float-right" ng-if="data.user != current" >{{data.message}}</div><div id="chatname" class="float-right" ng-if="data.user != current" >{{data.user}}</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-9">
 					<input class="form-control" ng-model="usermessage"/>
 				</div>
 				<div class="col-md-3">	
-					<button ng-click="send()" class="btn btn-primary">{{current_user}} Send</button>
+					<button ng-click="send()" class="btn btn-primary">{{current}} Send</button>
 				</div>
 			</div>
 		</div>
@@ -20,15 +25,9 @@
 			</div>
 		</div>
 	</div>
-</div>
 
 
-<div class="row" id="beforeChat" ng-show='!current_user'>
-	<label for="password" class="col-sm-2 control-label">Chat Username</label>
-	<div class="col-sm-6">
-		<input ng-model="user" name="username-chat" class="form-control"/>
-	</div>
-	<div class="col-sm-2">
-		<button ng-click="gochat()" class="btn btn-primary">gochat</button>
-	</div>
+<div class="row" id="beforeChat" ng-show='!authen'>
+	<div class = "alert alert-danger text-center"><h3>Please Login to Chat globaly or any current online use</h3></div>
 </div>
+

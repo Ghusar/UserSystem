@@ -52,18 +52,14 @@ var users = [];
 io.on('connection',function(socket){
 	
 
-	socket.on('new uservalue',function(data,callback){
+	socket.on('new uservalue',function(data){
 		console.log(data);
-		if(users.indexOf(data)>=0)
-			callback(false);
-		else{
-			callback(true);
 			socket.username = data;
 
 			users.push(socket.username);
 			io.emit('users',users);
 			io.emit('current_user',socket.username);
-		}
+		
 	});
 
 	//send message
@@ -72,12 +68,22 @@ io.on('connection',function(socket){
 		io.emit('new message',{message:data,user:socket.username});
 	});
 
+	//private message
+	socket.on('private message',function(data){
+		console.log(data);
+		if(socket.username == data.user){
+         
+         	        io.sockets.sockets[data.user].emit("private", { from: client.id, to: data.to, msg: data.msg });
+         
+		}
+	})
+
 	socket.on('disconnect',function(){
 		//for(x = 0; x < users.length;x++)
 			//console.log("connected users= "+users[x]);
 		users.splice(users.indexOf(socket.username));
 		io.emit('users',users);
-		//console.log("user dc");
+		console.log("user dc");
 	});
 });
 

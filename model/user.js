@@ -16,16 +16,18 @@ var userSchema = mongoose.Schema({
 var User = module.exports = mongoose.model('User',userSchema);
 
 module.exports.createUser = function(newuser,callback){
-	this.getUserByUsername(newuser.username,function(err,user,done){
-		if(err) throw err;
-		else if(user) console.log("user already exists");
+	//console.log(newuser);
+	this.getUserByUsername(newuser.username,function(err,user){
+		if(err) console.log(err);
+		else if(user) callback({message:"user already exist try another name",user:null});
 		else{
 			console.log(newuser+ " aya re aya data base me aya");
 			bcrypt.hash(newuser.password,10,function(err,hash){
 			if(err) console.log(err);
 			newuser.password = hash;
 			console.log(newuser.password);
-			newuser.save(callback)
+			console.log("bhedh re"+newuser.username);
+			newuser.save(callback({message:"user is ok",user:newuser.username}));
 		});
 		}
 	});

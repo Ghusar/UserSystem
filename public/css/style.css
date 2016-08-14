@@ -1,6 +1,48 @@
+html,body,#wrapper{
+	margin:0px;
+	padding:0px;
+	height: 100%;
+}
+
+#sidenavigation{
+	background-color:  #2793ff;
+	opacity:0.9;
+	padding:0px;
+	height:100%;
+}
+
+#block-content{
+	padding:5%;
+	text-align: center;
+}
+.sidenav-header{
+	display: block;
+	list-style-type: none;
+	padding:10px;
+	font:40px bold Tahoma;
+	color:white;
+	margin-bottom:50px;
+}
+.menu-item{
+	display:block;
+	text-align: left;
+	padding:10px;
+	font:20px bold Arial;
+	color: #c2c4ff ;
+	margin:10px 20px;
+}
+.menu-item:hover{
+	color:white;
+	background-color: #c2c4ff;
+}
+
+.menu-item:hover i{
+	color:white;
+}
 #chatWindow{
 	height:500px;
 	border:1px solid black;
+	overflow-y:scroll;
 }
 .row{
 	margin-top:10px;
@@ -54,4 +96,9 @@
 	max-width:100px;
 	border-radius:30px;
 	font:12px bold Arial;
+}
+
+i{
+	margin-right:10px;
+	color:#00e9f1
 }

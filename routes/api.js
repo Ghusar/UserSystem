@@ -27,19 +27,19 @@ router.post('/submit',function(req,res){
 	var name = req.body.username;
 	var word = req.body.password;
 
-	console.log(name);
+	//console.log(name);
 
 	var user = new User({
 		username:name,
 		password:word
 	});
-	User.createUser(user,function(err){
-		if(err){
-			console.log(err);
+	User.createUser(user,function(data){
+		if(data){
+			console.log("aja mere khwah");
+			res.send(data);
 		}
-		else{
-			console.log(user);
-		}
+		else
+			console.log("mar gaye");
 	});
 });
 

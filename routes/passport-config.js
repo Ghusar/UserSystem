@@ -20,6 +20,8 @@ passport.deserializeUser(function(id,done){
 
 passport.use(new LocalStrategy(
 	function(username,password,done){
+		console.log("aya to he kay");
+		console.log(username);
 		User.getUserByUsername(username,function(err,user){
 			if(err) return done(err);
 			
