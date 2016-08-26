@@ -1,6 +1,7 @@
 var app = angular.module('mainApp',['ngRoute']).run(function($rootScope,$http,$location){
 	$rootScope.current=null;
 	$rootScope.authen = false;
+	$rootScope.setChat = false;
 	$rootScope.msg = [];
 	socket = io();
 });
@@ -34,9 +35,10 @@ app.controller('chatController',function($scope,$location,$rootScope){
 	//$scope.apply();
 	$scope.er = '';
 	$scope.class = '';
-		if($rootScope.current){
+		if($rootScope.current&&$rootScope.setChat == false){
 			
 			socket.emit('new uservalue',$rootScope.current);
+			$rootScope.setChat = true;
 		}
 		//$scope.$apply();
 
@@ -53,7 +55,9 @@ app.controller('chatController',function($scope,$location,$rootScope){
 
 	socket.on('new message',function(data){
 		console.log(data);
+		$scope.$apply(function(){
 		$rootScope.msg.push(data);
+	});
 		/*$(function(){
 			if(data.user == $rootScope.current_user)
 			$('#chatWindow').append('<div  class="float-left" id="chatname">'+data.user+'</div><div id="message" class = "left float-left">'+data.message+'</div>');
@@ -68,7 +72,9 @@ app.controller('chatController',function($scope,$location,$rootScope){
 	});
 
 	socket.on('users',function(data){
+		$scope.$apply(function(){
 		$scope.usersOnline = data;
+	});
 	});
 
 	$scope.$on('$destroy',function(){
