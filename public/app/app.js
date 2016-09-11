@@ -2,6 +2,8 @@ var app = angular.module('mainApp',['ngRoute']).run(function($rootScope,$http,$l
 	$rootScope.current=null;
 	$rootScope.authen = false;
 	$rootScope.setChat = false;
+	$rootScope.flash = '';
+	flashbox = document.getElementById("flashMessage");
 	$rootScope.msg = [];
 	socket = io();
 });
@@ -109,6 +111,12 @@ app.controller('submitController',function($http,$scope,$location,$rootScope){
 				$rootScope.authen = true;
 				$rootScope.current = data.user;
 				$location.path('/home');
+				$rootScope.flash = "you are successfully registered in";
+				flashbox.style.display="block";
+				var temp = setTimeout(function(){
+					$rootScope.flash = '';
+					flashbox.style.display="none";
+				},1000);
 			}
 			else
 			{
@@ -143,6 +151,14 @@ app.controller('loginController',function($http,$scope,$rootScope,$location){
 				$rootScope.authen = true;
 				$rootScope.current = data.user;
 				$location.path('/home');
+				$rootScope.flash = "you are successfully logged in";
+				flashbox.style.display="block";
+				var temp = setTimeout(function(){
+					$rootScope.flash = '';
+					flashbox.style.display="none";
+				},1000);
+				
+				
 			}
 			else{
 				$scope.err = data.message;
@@ -155,6 +171,12 @@ app.controller('loginController',function($http,$scope,$rootScope,$location){
 	$scope.logout = function(){
 		socket.emit('disconnect');
 		$location.path('/login');
+		$rootScope.flash = "you are successfully logged out";
+				flashbox.style.display="block";
+				var temp = setTimeout(function(){
+					$rootScope.flash = '';
+					flashbox.style.display="none";
+				},1000);
 		$rootScope.authen = false;
 		$rootScope.current = null ;	
 	}	
